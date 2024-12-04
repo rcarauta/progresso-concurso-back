@@ -58,7 +58,7 @@ public class AuthControllerIntegrationTest {
 		// Dados de entrada
 		String username = "admin";
 		String password = "password";
-		LoginRequest loginRequest = new LoginRequest(username, password);
+		LoginRequest loginRequest = new LoginRequest(1L,username, password);
 
 		// Mock do retorno do AuthenticationManager
 		Authentication authentication = mock(Authentication.class);
@@ -67,7 +67,7 @@ public class AuthControllerIntegrationTest {
 
 		// Mock do serviço JWT
 		String mockToken = "mock-jwt-token";
-		when(jwtService.generateToken(username)).thenReturn(mockToken);
+		when(jwtService.generateToken(username, 1L)).thenReturn(mockToken);
 
 		// Execução do teste
 		ResultActions result = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +78,7 @@ public class AuthControllerIntegrationTest {
 
 		// Verifica interações
 		verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-		verify(jwtService, times(1)).generateToken(username);
+		verify(jwtService, times(1)).generateToken(username, 1L);
 	}
 
 }

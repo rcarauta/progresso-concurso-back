@@ -1,6 +1,7 @@
 package br.co.progresso.concurso.request;
 
 public class LoginRequest {
+	private Long id;
 	private String username;
 	private String password;
 
@@ -8,7 +9,8 @@ public class LoginRequest {
 		
 	}
 	
-	public LoginRequest(String username, String password) {
+	public LoginRequest(Long id, String username, String password) {
+		this.id = id;
 		this.username = username;
 		this.password = password;
 	}
@@ -28,6 +30,14 @@ public class LoginRequest {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

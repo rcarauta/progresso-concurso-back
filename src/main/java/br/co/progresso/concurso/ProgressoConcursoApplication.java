@@ -22,8 +22,8 @@ public class ProgressoConcursoApplication {
             public void addCorsMappings(CorsRegistry registry) {
                 // Permite que todas as rotas aceitem requisições do frontend
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173/")  // Permite apenas o domínio do frontend
-                        .allowedMethods("OPTIONS","GET", "POST", "PUT", "DELETE")  // Métodos permitidos
+                        .allowedOrigins("http://localhost:5173")  // Permite apenas o domínio do frontend
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Métodos permitidos
                         .allowedHeaders("*")  // Permite todos os cabeçalhos
                         .allowCredentials(true);  // Permite o envio de cookies, se necessário
             }

@@ -10,7 +10,21 @@ public class ConcursoRequest {
     private Float percentualEstudadoFloat;
     private Long userId;
 
-   
+    public ConcursoRequest() {
+
+    }
+
+    public ConcursoRequest(Long id, String nome, String dataProvaDate,
+                           Float percentualEstudadoFloat, Long userId) {
+        this.id = id;
+        this.nome = nome;
+        this.dataProvaDate = dataProvaDate;
+        this.percentualEstudadoFloat = percentualEstudadoFloat;
+        this.userId = userId;
+
+    }
+
+
     public Long getId() {
 		return id;
 	}

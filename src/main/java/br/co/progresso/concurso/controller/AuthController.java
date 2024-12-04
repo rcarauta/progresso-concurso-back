@@ -8,9 +8,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import br.co.progresso.concurso.model.User;
 import br.co.progresso.concurso.request.AuthResponse;
 import br.co.progresso.concurso.request.LoginRequest;
+import br.co.progresso.concurso.service.CustomUserDetailsService;
 import br.co.progresso.concurso.service.JwtService;
+import br.co.progresso.concurso.service.UserService;
 
 @RestController
 @RequestMapping("/login")
@@ -22,6 +25,9 @@ public class AuthController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
+	@Autowired
+	private UserService userService;
+	
 	@PostMapping
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 	    Authentication authentication = authenticationManager.authenticate(
@@ -29,9 +35,11 @@ public class AuthController {
 	    );
 
 	    SecurityContextHolder.getContext().setAuthentication(authentication);
-
+	    
+	    User user = userService.pegarUsuarioPeloUsername(loginRequest.getUsername());  
+	    
 	    // Gera o token JWT
-	    String token = jwtService.generateToken(loginRequest.getUsername());
+	    String token = jwtService.generateToken(loginRequest.getUsername(), user.getId());
 
 	    return ResponseEntity.ok(new AuthResponse(token));
 	}

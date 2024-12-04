@@ -1,7 +1,9 @@
 package br.co.progresso.concurso.convert;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,11 +19,14 @@ public class ConcursoConverter {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private DataConverter dataConverter;
+
 	public Concurso concursoRequestToConcurso(ConcursoRequest request) {
 		Concurso concurso = new Concurso();
 		concurso.setId(request.getId());
 		concurso.setNome(request.getNome());
-		concurso.setDataProvaDate(converterStringParaDate(request.getDataProvaDate()));
+		concurso.setDataProvaDate(dataConverter.converterStringParaDate(request.getDataProvaDate()));
 		concurso.setPercentualEstudadoFloat(request.getPercentualEstudadoFloat());
 		concurso.setUser(getUsuerPotrId(request.getUserId()));
 
@@ -31,11 +36,19 @@ public class ConcursoConverter {
 	public ConcursoRequest concursoToConcursoRequest(Concurso concurso) {
 		ConcursoRequest request = new ConcursoRequest();
 		request.setId(concurso.getId());
-		request.setDataProvaDate(converterDateParaString(concurso.getDataProvaDate()));
+		request.setDataProvaDate(dataConverter.converterDateParaString(concurso.getDataProvaDate()));
 		request.setNome(concurso.getNome());
 		request.setPercentualEstudadoFloat(concurso.getPercentualEstudadoFloat());
 		request.setUserId(verifyHasConcursoId(concurso.getUser()));
 
+		return request;
+	}
+
+	public List<ConcursoRequest> listConcursoToListConcursoRequest(List<Concurso> listConcurso) {
+		List<ConcursoRequest> request = new ArrayList<>();
+		listConcurso.forEach(concurso -> {
+			request.add(concursoToConcursoRequest(concurso));
+		});
 		return request;
 	}
 
@@ -46,23 +59,8 @@ public class ConcursoConverter {
 		return user.getId();
 	}
 
-	private User getUsuerPotrId(Long userId) {
+	public User getUsuerPotrId(Long userId) {
 		return userRepository.findById(userId).get();
-	}
-
-	private Date converterStringParaDate(String date) {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-		try {
-			return formatter.parse(date);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	private String converterDateParaString(Date date) {
-	  SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-      return formatter.format(date);
 	}
 
 }
