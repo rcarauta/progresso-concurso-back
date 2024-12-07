@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/db_progresso
-    username: postgres
-    password: postgres
+    username: admin
+    password: admin
     driver-class-name: org.postgresql.Driver
 
   flyway:
