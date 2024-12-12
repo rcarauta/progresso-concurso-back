@@ -42,7 +42,7 @@ public class Concurso {
     @ManyToMany
     @JoinTable(
             name = "contest_disciplina",
-            joinColumns = @JoinColumn(name = "ccontest_id"),
+            joinColumns = @JoinColumn(name = "contest_id"),
             inverseJoinColumns = @JoinColumn(name = "disciplina_id")
     )
     private List<Disciplina> disciplinas = new ArrayList<>();

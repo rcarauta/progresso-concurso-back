@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.co.progresso.concurso.infra.concurso.Concurso;
 import br.co.progresso.concurso.infra.concurso.ConcursoRepository;
+import br.co.progresso.concurso.infra.disciplina.Disciplina;
 
 import java.util.List;
 import java.util.Optional;

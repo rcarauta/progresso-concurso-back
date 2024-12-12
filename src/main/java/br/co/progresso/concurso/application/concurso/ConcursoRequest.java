@@ -1,5 +1,9 @@
 package br.co.progresso.concurso.application.concurso;
 
+import java.util.List;
+
+import br.co.progresso.concurso.infra.disciplina.Disciplina;
+
 public class ConcursoRequest {
 
 	private Long id;
@@ -7,6 +11,7 @@ public class ConcursoRequest {
     private String dataProvaDate;
     private Float percentualEstudadoFloat;
     private Long userId;
+    private List<Disciplina> listaDisciplinaEntity;
 
     public ConcursoRequest() {
 
@@ -62,4 +67,14 @@ public class ConcursoRequest {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+	public List<Disciplina> getListaDisciplinaEntity() {
+		return listaDisciplinaEntity;
+	}
+
+	public void setListaDisciplinaEntity(List<Disciplina> listaDisciplinaEntity) {
+		this.listaDisciplinaEntity = listaDisciplinaEntity;
+	}
+    
+    
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import br.co.progresso.concurso.application.DisciplinaDuplicadaException;
 import br.co.progresso.concurso.application.authentication.JwtService;
 import br.co.progresso.concurso.infra.disciplina.Disciplina;
 import br.co.progresso.concurso.infra.disciplina.DisciplinaRepository;
@@ -31,11 +32,14 @@ public class SalvarDisciplinaControllerIntegrationTest {
 
     @Autowired
     private JwtService jwtService;
-
+  
     @Test
     public void salvarDisciplina_deveRetornarStatus201EObjetoSalvo() throws Exception {
         DisciplinaRequest request = new DisciplinaRequest();
-        request.setNome("Matemática");
+        int randomNumber = (int)(Math.random() * 1_000_000_000) + 1;
+        String disciplina = "Matemárica"+randomNumber;
+
+        request.setNome(disciplina);
         request.setPorcentagem(60f);
 
         String jsonRequest = new ObjectMapper().writeValueAsString(request);
@@ -52,12 +56,12 @@ public class SalvarDisciplinaControllerIntegrationTest {
         DisciplinaRequest response = new ObjectMapper().readValue(responseContent, DisciplinaRequest.class);
 
         assertNotNull(response.getId());
-        assertEquals("Matemática", response.getNome());
+        assertEquals(disciplina, response.getNome());
         assertEquals(60f, response.getPorcentagem());
 
         DisciplinaRequest disciplinaSalva = disciplinaService.buscarPorId(response.getId());
         assertEquals(60f, disciplinaSalva.getPorcentagem());
-        assertEquals("Matemática", disciplinaSalva.getNome());
+        assertEquals(disciplina, disciplinaSalva.getNome());
     }
 
 }

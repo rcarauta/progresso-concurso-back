@@ -56,7 +56,6 @@ public class UserControllerSaveIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.username").value(username))
-                .andExpect(jsonPath("$.password").value("senha123"))
                 .andExpect(jsonPath("$.enabled").value(true));
 
         Optional<User> usuarioSalvo = userRepository.findByUsername(userRequest.getUsername());

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
@@ -13,8 +14,7 @@ public class ConcursoController {
 
 	@Autowired
 	public ConcursoService concursoService;
-	
-	
+
 	@PostMapping
 	public ResponseEntity<ConcursoRequest> salvarConcurso(@RequestBody ConcursoRequest request) {
 		ConcursoRequest concursoRequest = concursoService.salvar(request);
@@ -40,8 +40,10 @@ public class ConcursoController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ConcursoRequest> atualizarConcurso(@PathVariable("id") Long id, @RequestBody ConcursoRequest request) {
+	public ResponseEntity<ConcursoRequest> atualizarConcurso(@PathVariable("id") Long id,
+			@RequestBody ConcursoRequest request) {
 		ConcursoRequest atualizado = concursoService.atualizarConcurso(id, request);
 		return ResponseEntity.status(HttpStatus.OK).body(atualizado);
 	}
+
 }
