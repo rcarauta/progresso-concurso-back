@@ -2,6 +2,7 @@ package br.co.progresso.concurso.application.concurso;
 
 import java.util.List;
 
+import br.co.progresso.concurso.application.disciplina.DisciplinaRequest;
 import br.co.progresso.concurso.infra.disciplina.Disciplina;
 
 public class ConcursoRequest {
@@ -12,6 +13,7 @@ public class ConcursoRequest {
     private Float percentualEstudadoFloat;
     private Long userId;
     private List<Disciplina> listaDisciplinaEntity;
+    private List<DisciplinaRequest> listaDisciplinaRequest;
 
     public ConcursoRequest() {
 
@@ -75,6 +77,13 @@ public class ConcursoRequest {
 	public void setListaDisciplinaEntity(List<Disciplina> listaDisciplinaEntity) {
 		this.listaDisciplinaEntity = listaDisciplinaEntity;
 	}
-    
-    
+
+	public List<DisciplinaRequest> getListaDisciplinaRequest() {
+		return listaDisciplinaRequest;
+	}
+
+	public void setListaDisciplinaRequest(List<DisciplinaRequest> listaDisciplinaRequest) {
+		this.listaDisciplinaRequest = listaDisciplinaRequest;
+	}
+
 }

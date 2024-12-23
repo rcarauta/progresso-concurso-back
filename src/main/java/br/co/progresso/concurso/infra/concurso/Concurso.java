@@ -3,8 +3,10 @@ package br.co.progresso.concurso.infra.concurso;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import br.co.progresso.concurso.infra.user.User;
+import br.co.progresso.concurso.infra.concurso_disciplina_materia.ConcursoDisciplinaMateria;
 import br.co.progresso.concurso.infra.disciplina.Disciplina;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -39,13 +41,16 @@ public class Concurso {
     @NotNull(message = "O usuário não pode ser nulo.")
     private User user;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "contest_disciplina",
             joinColumns = @JoinColumn(name = "contest_id"),
             inverseJoinColumns = @JoinColumn(name = "disciplina_id")
-    )
+    	)
     private List<Disciplina> disciplinas = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "concurso", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ConcursoDisciplinaMateria> contestDisciplinaMaterias;
 
     public Long getId() {
         return id;
@@ -95,5 +100,15 @@ public class Concurso {
     public void setDisciplinas(List<Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
     }
+
+
+	public Set<ConcursoDisciplinaMateria> getContestDisciplinaMaterias() {
+		return contestDisciplinaMaterias;
+	}
+
+
+	public void setContestDisciplinaMaterias(Set<ConcursoDisciplinaMateria> contestDisciplinaMaterias) {
+		this.contestDisciplinaMaterias = contestDisciplinaMaterias;
+	}
 
 }

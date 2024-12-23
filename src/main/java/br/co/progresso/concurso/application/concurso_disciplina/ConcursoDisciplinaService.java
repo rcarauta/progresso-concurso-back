@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.co.progresso.concurso.application.ConcursoNaoEncontradoException;
 import br.co.progresso.concurso.application.concurso.ConcursoConverter;
 import br.co.progresso.concurso.application.concurso.ConcursoRequest;
+import br.co.progresso.concurso.application.disciplina.DisciplinaConverter;
 import br.co.progresso.concurso.infra.concurso.Concurso;
 import br.co.progresso.concurso.infra.concurso.ConcursoRepository;
 import br.co.progresso.concurso.infra.disciplina.Disciplina;
@@ -25,6 +26,9 @@ public class ConcursoDisciplinaService {
 	
 	@Autowired
 	private ConcursoConverter concursoConverter;
+	
+	@Autowired
+	private DisciplinaConverter disciplinaConverter;
 
 	@Transactional
 	public ConcursoRequest associarDisciplinas(Long concursoId, List<Long> disciplinaIds) {
@@ -47,11 +51,13 @@ public class ConcursoDisciplinaService {
                 .orElseThrow(() -> new ConcursoNaoEncontradoException(concursoId));
 		
 		List<Disciplina> listaDisciplina = disciplinaRepository.findBayIdConcurso(concurso.getId());
+		listaDisciplina.forEach(d -> d.setConcursos(null));
 		ConcursoRequest request = concursoConverter.concursoToConcursoRequest(concurso);
 		
-		request.setListaDisciplinaEntity(listaDisciplina);
+		request.setListaDisciplinaRequest(disciplinaConverter.listDisciplinaToListDisciplinaRequest(listaDisciplina));
 		
 		return request;
 	}
+	
 
 }

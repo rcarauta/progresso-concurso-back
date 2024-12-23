@@ -37,7 +37,7 @@ public class ConcursoControllerIntegrationTest {
 		// Criar uma requisição de teste
 		ConcursoRequest request = new ConcursoRequest();
 		request.setNome("Concurso ABC");
-		request.setDataProvaDate("2024-12-10");
+		request.setDataProvaDate("2030-12-10");
 		request.setPercentualEstudadoFloat(75.0f);
 		request.setUserId(1L);
 
@@ -52,7 +52,7 @@ public class ConcursoControllerIntegrationTest {
 				.andExpect(status().isCreated()) // Verifica se o status é 201 (Created)
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.nome").value("Concurso ABC")) // Verifica o campo "nome"
-				.andExpect(jsonPath("$.dataProvaDate").value("2024-12-10")) // Verifica a data
+				.andExpect(jsonPath("$.dataProvaDate").value("2030-12-10")) // Verifica a data
 				.andExpect(jsonPath("$.percentualEstudadoFloat").value(75.0f)); // Verifica o percentual
 	}
 

@@ -1,0 +1,1 @@
+ALTER TABLE disciplina ADD COLUMN ciclos INT DEFAULT 0 NOT NULL;

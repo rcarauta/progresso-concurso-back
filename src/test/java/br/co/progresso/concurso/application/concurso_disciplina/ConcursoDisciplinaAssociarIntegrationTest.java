@@ -68,6 +68,7 @@ public class ConcursoDisciplinaAssociarIntegrationTest {
 
         disciplinaRequest1.setNome(matematica);
         disciplinaRequest1.setPorcentagem(0.0f);
+        disciplinaRequest1.setCiclos(2);
 
         String disciplinaResponse1 = mockMvc.perform(post("/disciplina")
         		.header("Authorization", "Bearer " + token)
@@ -83,6 +84,7 @@ public class ConcursoDisciplinaAssociarIntegrationTest {
         DisciplinaRequest disciplinaRequest2 = new DisciplinaRequest();
         disciplinaRequest2.setNome(portugues);
         disciplinaRequest2.setPorcentagem(0.0f);
+        disciplinaRequest2.setCiclos(1);
 
         String disciplinaResponse2 = mockMvc.perform(post("/disciplina")
         		.header("Authorization", "Bearer " + token)

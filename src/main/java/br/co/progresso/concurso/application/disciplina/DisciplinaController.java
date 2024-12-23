@@ -31,7 +31,7 @@ public class DisciplinaController {
     	return ResponseEntity.status(HttpStatus.OK).body(listaDisciplina);
     }
     
-    @GetMapping("/{concrusoId}/list_not_concurso")
+    @GetMapping("/{concursoId}/list_not_concurso")
     public ResponseEntity<List<DisciplinaRequest>> listarDisciplinasNaoAssociadasAoConcurso(@PathVariable Long concursoId) {
     	List<DisciplinaRequest> listaNotConcurso = disciplinaService.listarDisciplinasNaoAssociadasAoConcurso(concursoId);
     	return ResponseEntity.status(HttpStatus.OK).body(listaNotConcurso);

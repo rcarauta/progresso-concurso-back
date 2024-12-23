@@ -13,7 +13,7 @@ public interface DisciplinaRepository extends JpaRepository<Disciplina, Long> {
 	List<Disciplina> findBayIdConcurso(Long concursoId);
 	
 	@Query("SELECT d FROM Disciplina d \n"
-			+ "WHERE EXISTS ( \n"
+			+ "WHERE NOT EXISTS ( \n"
 			+ "  SELECT 1 FROM Concurso c \n"
 			+ "  WHERE c.id = :concursoId AND c MEMBER OF d.concursos \n"
 			+ ")")

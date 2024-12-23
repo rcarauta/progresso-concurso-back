@@ -17,13 +17,14 @@ public class DisciplinaConverter {
         disciplina.setNome(request.getNome());
         disciplina.setPorcentagem(request.getPorcentagem());
         disciplina.setCategoria(request.getCategoria());
+        disciplina.setCiclos(request.getCiclos());
         return disciplina;
     }
 
     public DisciplinaRequest disciplinaToDisciplinaRequest(Disciplina disciplina) {
         return new DisciplinaRequest(disciplina.getId(),
                 disciplina.getNome(), disciplina.getPorcentagem(),
-                disciplina.getCategoria());
+                disciplina.getCategoria(), disciplina.getCiclos());
     }
     
     public List<DisciplinaRequest> listDisciplinaToListDisciplinaRequest(List<Disciplina> listaDisciplina) {

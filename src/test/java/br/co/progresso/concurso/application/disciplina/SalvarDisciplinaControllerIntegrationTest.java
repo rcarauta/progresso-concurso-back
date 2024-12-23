@@ -41,6 +41,7 @@ public class SalvarDisciplinaControllerIntegrationTest {
 
         request.setNome(disciplina);
         request.setPorcentagem(60f);
+        request.setCiclos(1);
 
         String jsonRequest = new ObjectMapper().writeValueAsString(request);
         String token = jwtService.generateToken("admin", 1L);

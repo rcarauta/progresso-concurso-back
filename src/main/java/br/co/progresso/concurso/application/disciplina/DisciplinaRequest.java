@@ -5,16 +5,18 @@ public class DisciplinaRequest {
     private String nome;
     private Float porcentagem;
     private CategoriaDisciplina categoria;
+    private Integer ciclos;
 
     public DisciplinaRequest() {
 
     }
 
-    public DisciplinaRequest(Long id, String nome, Float porcentagem, CategoriaDisciplina categoria) {
+    public DisciplinaRequest(Long id, String nome, Float porcentagem, CategoriaDisciplina categoria, Integer ciclos) {
         this.id = id;
         this.nome = nome;
         this.porcentagem = porcentagem;
         this.categoria = categoria;
+        this.ciclos = ciclos;
     }
 
     public Long getId() {
@@ -48,5 +50,13 @@ public class DisciplinaRequest {
 	public void setCategoria(CategoriaDisciplina categoria) {
 		this.categoria = categoria;
 	}
-     
+
+	public Integer getCiclos() {
+		return ciclos;
+	}
+
+	public void setCiclos(Integer ciclos) {
+		this.ciclos = ciclos;
+	}
+	    
 }
