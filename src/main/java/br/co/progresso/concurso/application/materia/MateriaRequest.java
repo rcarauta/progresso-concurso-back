@@ -2,26 +2,28 @@ package br.co.progresso.concurso.application.materia;
 
 import java.time.LocalTime;
 
+
 public class MateriaRequest {
 
 	private Long id;
 
 	private String nome;
-
+	
 	private Float porcentagem;
-
+	
 	private LocalTime tempoEstudo;
-
+	
+	private Integer totalQuestoes;
+	
+	private Integer questoesAcertadas;
 
 	public MateriaRequest() {
 
 	}
 
-	public MateriaRequest(Long id, String nome, Float porcentagem, LocalTime tempoEstudo) {
+	public MateriaRequest(Long id, String nome) {
 		this.id = id;
 		this.nome = nome;
-		this.porcentagem = porcentagem;
-		this.tempoEstudo = tempoEstudo;
 	}
 
 	public Long getId() {
@@ -54,6 +56,22 @@ public class MateriaRequest {
 
 	public void setTempoEstudo(LocalTime tempoEstudo) {
 		this.tempoEstudo = tempoEstudo;
+	}
+
+	public Integer getTotalQuestoes() {
+		return totalQuestoes;
+	}
+
+	public void setTotalQuestoes(Integer totalQuestoes) {
+		this.totalQuestoes = totalQuestoes;
+	}
+
+	public Integer getQuestoesAcertadas() {
+		return questoesAcertadas;
+	}
+
+	public void setQuestoesAcertadas(Integer questoesAcertadas) {
+		this.questoesAcertadas = questoesAcertadas;
 	}
 
 }

@@ -10,8 +10,12 @@ import br.co.progresso.concurso.application.ConcursoNaoEncontradoException;
 import br.co.progresso.concurso.application.concurso.ConcursoConverter;
 import br.co.progresso.concurso.application.concurso.ConcursoRequest;
 import br.co.progresso.concurso.application.disciplina.DisciplinaConverter;
+import br.co.progresso.concurso.application.disciplina.DisciplinaRequest;
 import br.co.progresso.concurso.infra.concurso.Concurso;
 import br.co.progresso.concurso.infra.concurso.ConcursoRepository;
+import br.co.progresso.concurso.infra.concurso_disciplina.ConcursoDisciplina;
+import br.co.progresso.concurso.infra.concurso_disciplina.ConcursoDisciplinaId;
+import br.co.progresso.concurso.infra.concurso_disciplina.ConcursoDisciplinaRepository;
 import br.co.progresso.concurso.infra.disciplina.Disciplina;
 import br.co.progresso.concurso.infra.disciplina.DisciplinaRepository;
 
@@ -29,6 +33,10 @@ public class ConcursoDisciplinaService {
 	
 	@Autowired
 	private DisciplinaConverter disciplinaConverter;
+	
+	@Autowired
+	private ConcursoDisciplinaRepository concursoDisciplinaRepository;
+
 
 	@Transactional
 	public ConcursoRequest associarDisciplinas(Long concursoId, List<Long> disciplinaIds) {
@@ -53,10 +61,27 @@ public class ConcursoDisciplinaService {
 		List<Disciplina> listaDisciplina = disciplinaRepository.findBayIdConcurso(concurso.getId());
 		listaDisciplina.forEach(d -> d.setConcursos(null));
 		ConcursoRequest request = concursoConverter.concursoToConcursoRequest(concurso);
-		
-		request.setListaDisciplinaRequest(disciplinaConverter.listDisciplinaToListDisciplinaRequest(listaDisciplina));
+		request.setListaDisciplinaRequest(disciplinaConverter.listDisciplinaToListDisciplinaRequest(listaDisciplina, concursoId));
 		
 		return request;
+	}
+
+	public ConcursoRequest ordenarDisciplinaConcurso(Long concursoId, Long disciplinaId, Integer numeroOrdem) {
+		ConcursoDisciplinaId id = new ConcursoDisciplinaId(concursoId, disciplinaId);
+		ConcursoDisciplina disciplina = concursoDisciplinaRepository.findById(id).get();
+		disciplina.setOrdem(numeroOrdem);
+		concursoDisciplinaRepository.save(disciplina);
+		ConcursoRequest request = new ConcursoRequest();
+		request.setOrdem(disciplina.getOrdem());	
+		return request;
+	}
+
+	public ConcursoRequest listaOrdenadaDisciplinaConcurso(Long concursoId) {
+		List<Disciplina> listaDisciplina = concursoDisciplinaRepository.findDisciplinasByContestIdWithOrder(concursoId);
+		ConcursoRequest concursoRequest = new ConcursoRequest();
+		List<DisciplinaRequest> listaDisciplinaRequest = disciplinaConverter.listDisciplinaToListDisciplinaRequest(listaDisciplina);
+		concursoRequest.setListaDisciplinaRequest(listaDisciplinaRequest);
+		return concursoRequest;
 	}
 	
 

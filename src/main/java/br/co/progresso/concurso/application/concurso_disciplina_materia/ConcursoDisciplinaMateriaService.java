@@ -1,5 +1,7 @@
 package br.co.progresso.concurso.application.concurso_disciplina_materia;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +60,30 @@ public class ConcursoDisciplinaMateriaService {
 		return concursoDisciplinaMateria;
 	}
 
+
+	public ConcursoDisciplinaMateriaRequest alterarMateriaAoConcursoDisciplina(Long concursoId, Long disciplinaId,
+			MateriaRequest materiaRequest) {
+		ConcursoDisciplinaMateriaId id = new ConcursoDisciplinaMateriaId(materiaRequest.getId(), disciplinaId, concursoId);
+		ConcursoDisciplinaMateria concursoDisciplinaMateria = concursoDisciplinaMateriaRepository.findById(id).get();
+		concursoDisciplinaMateria.setPorcentagem(materiaRequest.getPorcentagem());
+		concursoDisciplinaMateria = concursoDisciplinaMateriaConverter.modificarPorcentagem(materiaRequest, concursoDisciplinaMateria);
+		concursoDisciplinaMateria.setTotalQuestoes(materiaRequest.getTotalQuestoes());
+		concursoDisciplinaMateria.setQuestoesAcertadas(materiaRequest.getQuestoesAcertadas());
+		concursoDisciplinaMateria = concursoDisciplinaMateriaRepository.save(concursoDisciplinaMateria);
+		return concursoDisciplinaMateriaConverter.concursoMateriaToRequest(concursoDisciplinaMateria);
+	}
+
+
+	public List<MateriaRequest> recuperaMateriaRequestComPorcentagem(Long disciplinaId,
+			Long concursoId) {
+		List<ConcursoDisciplinaMateria> listaConcursoDisciplinaMateria = concursoDisciplinaMateriaRepository
+				.findByIdConcursoIdAndIdDisciplinaId(concursoId, disciplinaId);
+		
+		List<MateriaRequest> requestList = concursoDisciplinaMateriaConverter
+				.addValueConcursoDisciplinaMateriaToMateriaRequest(listaConcursoDisciplinaMateria);
+
+		return requestList;
+	}
 	
 	
 }

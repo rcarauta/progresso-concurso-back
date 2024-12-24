@@ -81,8 +81,6 @@ class ConcursoDisciplinaMateriaIntegrationTest {
 
          Materia materia = new Materia();
          materia.setNome("Matéria Teste");
-         materia.setPorcentagem(10.5F);
-         materia.setTempoEstudo(LocalTime.now());
          materia = materiaRepository.save(materia);
     	
         Long concursoId = concurso.getId();
@@ -93,9 +91,7 @@ class ConcursoDisciplinaMateriaIntegrationTest {
         String materiaRequestJson = """
                 {
                     "id": %d,
-                    "nome": "Matéria Teste",
-                    "porcentagem": 50.0,
-                    "tempoEstudo": "02:00:00"
+                    "nome": "Matéria Teste"
                 }
                 """.formatted(materiaId);
 
@@ -130,8 +126,6 @@ class ConcursoDisciplinaMateriaIntegrationTest {
 
          Materia materia = new Materia();
          materia.setNome("Matéria Teste");
-         materia.setPorcentagem(10.5F);
-         materia.setTempoEstudo(LocalTime.now());
          materia = materiaRepository.save(materia);
     	
         Long concursoId = concurso.getId();
@@ -142,9 +136,7 @@ class ConcursoDisciplinaMateriaIntegrationTest {
         String materiaRequestJson = """
                 {
                     "id": %d,
-                    "nome": "Matéria Teste",
-                    "porcentagem": 50.0,
-                    "tempoEstudo": "02:00:00"
+                    "nome": "Matéria Teste"
                 }
                 """.formatted(materiaId);
 

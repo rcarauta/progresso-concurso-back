@@ -24,11 +24,6 @@ public class Materia {
     @Column(nullable = false, length = 255)
     private String nome; 
 
-    private Float porcentagem; 
-
-    private LocalTime tempoEstudo; 
-
-    
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ConcursoDisciplinaMateria> contestDisciplinaMaterias;
 
@@ -47,22 +42,6 @@ public class Materia {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public Float getPorcentagem() {
-        return porcentagem;
-    }
-
-    public void setPorcentagem(Float porcentagem) {
-        this.porcentagem = porcentagem;
-    }
-
-    public LocalTime getTempoEstudo() {
-        return tempoEstudo;
-    }
-
-    public void setTempoEstudo(LocalTime tempoEstudo) {
-        this.tempoEstudo = tempoEstudo;
     }
 
 	public Set<ConcursoDisciplinaMateria> getContestDisciplinaMaterias() {

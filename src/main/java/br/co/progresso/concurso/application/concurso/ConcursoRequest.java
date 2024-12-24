@@ -14,6 +14,7 @@ public class ConcursoRequest {
     private Long userId;
     private List<Disciplina> listaDisciplinaEntity;
     private List<DisciplinaRequest> listaDisciplinaRequest;
+    private Integer ordem;
 
     public ConcursoRequest() {
 
@@ -84,6 +85,14 @@ public class ConcursoRequest {
 
 	public void setListaDisciplinaRequest(List<DisciplinaRequest> listaDisciplinaRequest) {
 		this.listaDisciplinaRequest = listaDisciplinaRequest;
+	}
+
+	public Integer getOrdem() {
+		return ordem;
+	}
+
+	public void setOrdem(Integer ordem) {
+		this.ordem = ordem;
 	}
 
 }

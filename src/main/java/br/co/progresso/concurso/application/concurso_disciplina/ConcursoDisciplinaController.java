@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,21 @@ public class ConcursoDisciplinaController {
 	public ResponseEntity<ConcursoRequest> verificaDisciplinasConcurso(@PathVariable Long concursoId) {
 		ConcursoRequest request = concursoDisciplinaService.verificarDisciplinasConcurso(concursoId);
 		return ResponseEntity.status(HttpStatus.OK).body(request);
+	}
+	
+	@PutMapping("/{concursoId}/{disciplinaId}/ordenar") 
+	public ResponseEntity<ConcursoRequest> ordenarDisciplinaConcurso(@PathVariable Long concursoId,
+			@PathVariable Long disciplinaId, @RequestBody List<Integer> numeroOrdem) {
+		ConcursoRequest updateRequest = concursoDisciplinaService.ordenarDisciplinaConcurso(
+				concursoId, disciplinaId , numeroOrdem.get(0));
+		return ResponseEntity.status(HttpStatus.OK).body(updateRequest);
+	}
+	
+	@GetMapping("/{concursoId}/listar_ordem")
+	public ResponseEntity<ConcursoRequest> listaOrdenadaDisciplinaConcurso(@PathVariable Long concursoId) {
+		ConcursoRequest listCooncursoDisciplina = concursoDisciplinaService
+				.listaOrdenadaDisciplinaConcurso(concursoId);
+		return ResponseEntity.status(HttpStatus.OK).body(listCooncursoDisciplina);
 	}
 	
 	

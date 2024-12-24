@@ -1,6 +1,5 @@
 package br.co.progresso.concurso.application.materia;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +15,12 @@ public class MateriaConverter {
 		Materia materia = new Materia();
 		materia.setId(request.getId());
 		materia.setNome(request.getNome());
-		materia.setPorcentagem(request.getPorcentagem());
-		materia.setTempoEstudo(request.getTempoEstudo());
 		return materia;
 	}
 	
 	public MateriaRequest materiaToMateriaRequest(Materia materia) {
 		MateriaRequest request = new MateriaRequest(materia.getId(),
-				materia.getNome(), materia.getPorcentagem(), materia.getTempoEstudo());
+				materia.getNome());
 		return request;
 	}
 	
@@ -37,14 +34,6 @@ public class MateriaConverter {
 	
 	public Materia addMateriaRequestInMateria(Materia materia, MateriaRequest request) {
 		materia.setNome(request.getNome());
-		materia.setPorcentagem(request.getPorcentagem());
-		
-	    LocalTime tempoEstudoMateria = materia.getTempoEstudo();
-	    LocalTime tempoEstudoRequest = request.getTempoEstudo();
-	    
-	    long minutosTotais = tempoEstudoMateria.toSecondOfDay() + tempoEstudoRequest.toSecondOfDay();
-		
-		materia.setTempoEstudo(LocalTime.ofSecondOfDay(minutosTotais));
 		return materia;
 	}
 	

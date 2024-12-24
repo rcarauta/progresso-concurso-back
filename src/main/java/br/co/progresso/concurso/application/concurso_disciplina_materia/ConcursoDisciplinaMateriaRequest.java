@@ -1,5 +1,7 @@
 package br.co.progresso.concurso.application.concurso_disciplina_materia;
 
+import java.time.LocalTime;
+
 public class ConcursoDisciplinaMateriaRequest {
 
 	private Long concursoId;
@@ -8,17 +10,23 @@ public class ConcursoDisciplinaMateriaRequest {
 	
 	private Long materiaId;
 	
+	private Float porcentagem;
+
+	private LocalTime tempoEstudo;
+	
 	
 	public ConcursoDisciplinaMateriaRequest() {
 		
 	}
 
 
-	public ConcursoDisciplinaMateriaRequest(Long concursoId, Long disciplinaId, Long materiaId) {
-		super();
+	public ConcursoDisciplinaMateriaRequest(Long concursoId, Long disciplinaId, Long materiaId,
+			Float porcentagem, LocalTime tempoEstudo) {
 		this.concursoId = concursoId;
 		this.disciplinaId = disciplinaId;
 		this.materiaId = materiaId;
+		this.porcentagem = porcentagem;
+		this.tempoEstudo = tempoEstudo;
 	}
 
 
@@ -52,7 +60,24 @@ public class ConcursoDisciplinaMateriaRequest {
 		this.materiaId = materiaId;
 	}
 
-	
-	
+
+	public Float getPorcentagem() {
+		return porcentagem;
+	}
+
+
+	public void setPorcentagem(Float porcentagem) {
+		this.porcentagem = porcentagem;
+	}
+
+
+	public LocalTime getTempoEstudo() {
+		return tempoEstudo;
+	}
+
+
+	public void setTempoEstudo(LocalTime tempoEstudo) {
+		this.tempoEstudo = tempoEstudo;
+	}
 	
 }

@@ -1,10 +1,14 @@
 package br.co.progresso.concurso.application.concurso_disciplina_materia;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +28,23 @@ public class ConcursoDisciplinaMateriaController {
 		ConcursoDisciplinaMateriaRequest request = concursoDisciplinaMateriaService.associarMateriaAoConcursoDisciplina(
 				concursoId, disciplinaId, materiaRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(request);
+	}
+	
+	@PutMapping("{concursoId}/{disciplinaId}/alterar")
+	public ResponseEntity<ConcursoDisciplinaMateriaRequest> alterarMateriaAoConcursoDisciplina(
+			@PathVariable Long concursoId, @PathVariable Long disciplinaId, @RequestBody MateriaRequest materiaRequest) {
+		ConcursoDisciplinaMateriaRequest request = concursoDisciplinaMateriaService.alterarMateriaAoConcursoDisciplina(
+				concursoId, disciplinaId, materiaRequest);
+		return ResponseEntity.status(HttpStatus.OK).body(request);
+		
+	}
+	
+	@GetMapping("{concursoId}/{disciplinaId}/recuperar")
+	public ResponseEntity<List<MateriaRequest>> recuperarMateriaAoConcursoDisciplina(
+			@PathVariable Long concursoId, @PathVariable Long disciplinaId) {
+		List<MateriaRequest> request = concursoDisciplinaMateriaService.recuperaMateriaRequestComPorcentagem(disciplinaId, 
+				concursoId);
+		return ResponseEntity.status(HttpStatus.OK).body(request);
 	}
 	
 }
