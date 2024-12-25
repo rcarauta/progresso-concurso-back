@@ -1,5 +1,6 @@
 package br.co.progresso.concurso.application.concurso_disciplina;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,17 @@ public class ConcursoDisciplinaService {
 		List<DisciplinaRequest> listaDisciplinaRequest = disciplinaConverter.listDisciplinaToListDisciplinaRequest(listaDisciplina);
 		concursoRequest.setListaDisciplinaRequest(listaDisciplinaRequest);
 		return concursoRequest;
+	}
+
+	public ConcursoRequest atualizarCiclosDisciplina(Long concursoId, Long disciplinaId, Integer ciclos) {
+		ConcursoDisciplinaId id = new ConcursoDisciplinaId(concursoId, disciplinaId);
+		ConcursoDisciplina disciplina = concursoDisciplinaRepository.findById(id).get();
+		disciplina.setCiclos(ciclos);
+		concursoDisciplinaRepository.save(disciplina);
+		ConcursoRequest request = new ConcursoRequest();
+		request.setListaDisciplinaRequest(Arrays.asList(disciplinaConverter
+				.disciplinaToDisciplinaRequest(disciplina.getDisciplina())));
+		return request;
 	}
 	
 

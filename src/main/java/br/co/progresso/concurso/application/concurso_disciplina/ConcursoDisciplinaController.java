@@ -51,5 +51,13 @@ public class ConcursoDisciplinaController {
 		return ResponseEntity.status(HttpStatus.OK).body(listCooncursoDisciplina);
 	}
 	
+	@PutMapping("/{concursoId}/{disciplinaId}/atualizar_ciclo")
+	public ResponseEntity<ConcursoRequest> atualizarCiclosDisciplina(@PathVariable Long concursoId,
+			@PathVariable Long disciplinaId, @RequestBody List<Integer> numeroCiclo) {
+		ConcursoRequest concursoDisciplina = concursoDisciplinaService.
+				atualizarCiclosDisciplina(concursoId, disciplinaId, numeroCiclo.get(0));
+		return ResponseEntity.status(HttpStatus.OK).body(concursoDisciplina);
+	}
+	
 	
 }
