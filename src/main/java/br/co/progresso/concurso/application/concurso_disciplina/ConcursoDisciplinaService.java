@@ -1,5 +1,6 @@
 package br.co.progresso.concurso.application.concurso_disciplina;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,7 +63,9 @@ public class ConcursoDisciplinaService {
 		List<Disciplina> listaDisciplina = disciplinaRepository.findBayIdConcurso(concurso.getId());
 		listaDisciplina.forEach(d -> d.setConcursos(null));
 		ConcursoRequest request = concursoConverter.concursoToConcursoRequest(concurso);
-		request.setListaDisciplinaRequest(disciplinaConverter.listDisciplinaToListDisciplinaRequest(listaDisciplina, concursoId));
+		List<DisciplinaRequest> listaRequest = disciplinaConverter.listDisciplinaToListDisciplinaRequest(listaDisciplina, concursoId);
+		listaRequest = adicionarPorcentagemDisciplinas(concursoId,listaRequest);
+		request.setListaDisciplinaRequest(listaRequest);
 		
 		return request;
 	}
@@ -95,6 +98,20 @@ public class ConcursoDisciplinaService {
 				.disciplinaToDisciplinaRequest(disciplina.getDisciplina())));
 		return request;
 	}
+	
+	private List<DisciplinaRequest> adicionarPorcentagemDisciplinas(Long concursoId, List<DisciplinaRequest> listaRequest) {
+		List<DisciplinaRequest> listaComPorcentagem = disciplinaRepository.
+				findDisciplinasWithAverageProgressByConcurso(concursoId);
+		List<DisciplinaRequest> listaRequestComPorcentagem = new ArrayList<>();
+		for(Integer i = 0; i <  listaRequest.size() -1; i++) {
+			DisciplinaRequest disciplina = listaRequest.get(i);
+			DisciplinaRequest porcentagem = listaComPorcentagem.get(i);
+			disciplina.setPorcentagem(porcentagem.getPorcentagem());
+			listaRequestComPorcentagem.add(disciplina);
+		}
+		return listaRequestComPorcentagem;
+	}
+
 	
 
 }

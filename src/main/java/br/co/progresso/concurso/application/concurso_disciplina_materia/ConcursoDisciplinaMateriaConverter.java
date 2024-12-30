@@ -42,6 +42,10 @@ public class ConcursoDisciplinaMateriaConverter {
 		LocalTime tempoEstudoMateria = concurso.getTempoEstudo();
 		LocalTime tempoEstudoRequest = request.getTempoEstudo();
 		
+		tempoEstudoMateria = tempoEstudoMateria == null ? LocalTime.of(0,0) : tempoEstudoMateria;
+		
+		tempoEstudoRequest = tempoEstudoRequest == null ? LocalTime.of(0,0) : tempoEstudoRequest;
+		
 		long minutosTotais = tempoEstudoMateria.toSecondOfDay() + tempoEstudoRequest.toSecondOfDay();
 		
 		concurso.setTempoEstudo(LocalTime.ofSecondOfDay(minutosTotais));

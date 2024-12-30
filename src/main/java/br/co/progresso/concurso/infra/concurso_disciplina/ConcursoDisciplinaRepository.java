@@ -20,4 +20,7 @@ public interface ConcursoDisciplinaRepository extends JpaRepository<ConcursoDisc
 	           "ORDER BY cd.ordem ASC")
 	    List<Disciplina> findDisciplinasByContestIdWithOrder(Long contestId);
 	 
+	 @Query("SELECT cd FROM ConcursoDisciplina cd WHERE cd.id.contestId = :contestId")
+	 List<ConcursoDisciplina> findAllDisciplinaByContest(@Param("contestId") Long contestId);
+	 
 }

@@ -1,3 +1,3 @@
 ALTER TABLE materia
-ADD COLUMN totalQuestoes NUMERIC DEFAULT 0,
-ADD COLUMN questoesAcertadas NUMERIC DEFAULT 0;
+ADD COLUMN total_questoes NUMERIC DEFAULT 0,
+ADD COLUMN questoes_acertadas NUMERIC DEFAULT 0;

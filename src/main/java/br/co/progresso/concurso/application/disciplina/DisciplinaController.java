@@ -37,5 +37,11 @@ public class DisciplinaController {
     	return ResponseEntity.status(HttpStatus.OK).body(listaNotConcurso);
     }
     
+    @GetMapping("/{concursoId}/porcentagem_disciplina")
+    public ResponseEntity<List<DisciplinaRequest>> totalPorcentagemDisciplina(@PathVariable Long concursoId) {
+    	List<DisciplinaRequest> listaRequest = disciplinaService.totalPorcentagemDisciplina(concursoId);
+    	return ResponseEntity.status(HttpStatus.OK).body(listaRequest);
+    }
+    
 
 }

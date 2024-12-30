@@ -12,6 +12,8 @@ public interface ConcursoDisciplinaMateriaRepository extends JpaRepository<Concu
     
 	List<ConcursoDisciplinaMateria> findByIdConcursoIdAndIdDisciplinaId(Long concursoId, Long disciplinaId);
 	
+	List<ConcursoDisciplinaMateria> findByConcursoId(Long concursoId);
+	
 	@Query("""
 		    SELECT new br.co.progresso.concurso.infra.disciplina_materia.DisciplinaMateriaDto(
 		        d.nome, 
@@ -27,7 +29,6 @@ public interface ConcursoDisciplinaMateriaRepository extends JpaRepository<Concu
 		    ORDER BY d.nome
 		""")
 	List<DisciplinaMateriaDto> findDisciplinaResumo(@Param("concursoId") Long concursoId);
-
 
 	
 }

@@ -32,7 +32,13 @@ public class ConcursoController {
 		List<ConcursoRequest> request = concursoService.recuperarTodosConcursosDoUsuario(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(request);
 	}
-
+	
+	@GetMapping("/list_porcentagem/{userId}")
+	public ResponseEntity<List<ConcursoRequest>> listaToodosOsConcursosPorcentagem(@PathVariable("userId") Long userId) {
+		List<ConcursoRequest> listaRequest = concursoService.recuperaListaComPorcentagem(userId);
+		return ResponseEntity.status(HttpStatus.OK).body(listaRequest);
+	}
+	
 	@GetMapping("/{contestId}")
 	public ResponseEntity<ConcursoRequest> buscarConcursoPeloId(@PathVariable("contestId") Long id) {
 		ConcursoRequest request = concursoService.buscarConcursoPeloId(id);
@@ -44,6 +50,12 @@ public class ConcursoController {
 			@RequestBody ConcursoRequest request) {
 		ConcursoRequest atualizado = concursoService.atualizarConcurso(id, request);
 		return ResponseEntity.status(HttpStatus.OK).body(atualizado);
+	}
+	
+	@PostMapping("/clonar_concurso/{concursoId}")
+	public ResponseEntity<ConcursoRequest> clonarConcurso(@PathVariable Long concursoId, @RequestBody List<Long> userDestinyId ) {
+		ConcursoRequest cloneRequest = concursoService.clonarConcurso(concursoId, userDestinyId);
+		return ResponseEntity.status(HttpStatus.OK).body(cloneRequest);
 	}
 
 }

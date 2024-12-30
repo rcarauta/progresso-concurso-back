@@ -56,4 +56,10 @@ public class DisciplinaService {
 		return disciplinaConverter.listDisciplinaToListDisciplinaRequest(listaDisciplina);
 	}
 
+	public List<DisciplinaRequest> totalPorcentagemDisciplina(Long concursoId) {
+		List<DisciplinaRequest> listRequest = disciplinaRepository.
+				findDisciplinasWithAverageProgressByConcurso(concursoId);
+		return listRequest;
+	}
+
 }
