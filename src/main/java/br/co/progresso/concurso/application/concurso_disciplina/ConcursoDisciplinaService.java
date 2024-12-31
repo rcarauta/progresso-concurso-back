@@ -3,6 +3,8 @@ package br.co.progresso.concurso.application.concurso_disciplina;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,18 +102,23 @@ public class ConcursoDisciplinaService {
 	}
 	
 	private List<DisciplinaRequest> adicionarPorcentagemDisciplinas(Long concursoId, List<DisciplinaRequest> listaRequest) {
-		List<DisciplinaRequest> listaComPorcentagem = disciplinaRepository.
-				findDisciplinasWithAverageProgressByConcurso(concursoId);
-		List<DisciplinaRequest> listaRequestComPorcentagem = new ArrayList<>();
-		for(Integer i = 0; i <  listaRequest.size() -1; i++) {
-			DisciplinaRequest disciplina = listaRequest.get(i);
-			DisciplinaRequest porcentagem = listaComPorcentagem.get(i);
-			disciplina.setPorcentagem(porcentagem.getPorcentagem());
-			listaRequestComPorcentagem.add(disciplina);
-		}
-		return listaRequestComPorcentagem;
-	}
+	    List<DisciplinaRequest> listaComPorcentagem = disciplinaRepository.findDisciplinasWithAverageProgressByConcurso(concursoId);
+	    
+	    if (listaComPorcentagem.isEmpty()) {
+	        return listaRequest; 
+	    }
 
-	
+	    Map<Long, DisciplinaRequest> disciplinaPorIdMap = listaComPorcentagem.stream()
+	        .collect(Collectors.toMap(DisciplinaRequest::getId, disciplina -> disciplina));
+
+	    listaRequest.forEach(disciplina -> {
+	        DisciplinaRequest porcentagem = disciplinaPorIdMap.get(disciplina.getId());
+	        if (porcentagem != null) {
+	            disciplina.setPorcentagem(porcentagem.getPorcentagem());
+	        }
+	    });
+
+	    return listaRequest;
+	}
 
 }

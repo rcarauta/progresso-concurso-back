@@ -81,16 +81,19 @@ public class ConcursoService {
 	public List<ConcursoRequest> recuperaListaComPorcentagem(Long userId) {
 		List<Concurso> listaConcursoUsuario = concursoRepostiory.findByUserId(userId);
 		List<ConcursoRequest> listaSemPorcentagem = concursoConverter.
-				listConcursoToListConcursoRequest(listaConcursoUsuario);
-		List<ConcursoRequest> listaConcursoPorcentagem = concursoRepostiory
-				.findConcursoRequestsByUserId(userId);
+		
+		listConcursoToListConcursoRequest(listaConcursoUsuario);
+		
+		List<ConcursoRequest> listaConcursoPorcentagem = recuperarPorcentagemPorConcurso(userId, listaConcursoUsuario);
+		
 		if(listaConcursoPorcentagem.size() == 0) {
 			return listaSemPorcentagem;
 		}
 		listaConcursoPorcentagem = adicionarPorcentagemLista(listaSemPorcentagem, listaConcursoPorcentagem);
 		return listaConcursoPorcentagem;
 	}
-	
+
+
 	@Transactional
 	public ConcursoRequest clonarConcurso(Long concursoId, List<Long> userDestinyId) {
 		Concurso concurso = concursoRepostiory.findById(concursoId).get();
@@ -190,4 +193,20 @@ public class ConcursoService {
 			System.out.println(salvar);
 		});
 	}
+	
+	
+	private List<ConcursoRequest> recuperarPorcentagemPorConcurso(Long userId, List<Concurso> listaConcursoUsuario) {	
+		List<ConcursoRequest> concursoResquest = new ArrayList<>();
+		
+		listaConcursoUsuario.forEach(concurso -> {
+			ConcursoRequest request = concursoRepostiory.findConcursoRequestsByUserIdAndConcursoId(userId, concurso.getId());
+			if(request != null) {
+				concursoResquest.add(request);
+			}
+		});
+			
+		return concursoResquest;
+	}
+	
+
 }

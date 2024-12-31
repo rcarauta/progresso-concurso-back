@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ public class ConcursoDisciplinaMateriaController {
 	@Autowired
 	private ConcursoDisciplinaMateriaService concursoDisciplinaMateriaService;
 	
+	@PreAuthorize("hasRole('USER')")
 	@PostMapping("{concursoId}/{disciplinaId}/associar")
 	public ResponseEntity<ConcursoDisciplinaMateriaRequest> associarMatriaAoConcursoDisciplina(
 			@PathVariable Long concursoId, @PathVariable Long disciplinaId, @RequestBody MateriaRequest materiaRequest) {
@@ -30,6 +32,7 @@ public class ConcursoDisciplinaMateriaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(request);
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@PutMapping("{concursoId}/{disciplinaId}/alterar")
 	public ResponseEntity<ConcursoDisciplinaMateriaRequest> alterarMateriaAoConcursoDisciplina(
 			@PathVariable Long concursoId, @PathVariable Long disciplinaId, @RequestBody MateriaRequest materiaRequest) {
@@ -39,6 +42,7 @@ public class ConcursoDisciplinaMateriaController {
 		
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@GetMapping("{concursoId}/{disciplinaId}/recuperar")
 	public ResponseEntity<List<MateriaRequest>> recuperarMateriaAoConcursoDisciplina(
 			@PathVariable Long concursoId, @PathVariable Long disciplinaId) {

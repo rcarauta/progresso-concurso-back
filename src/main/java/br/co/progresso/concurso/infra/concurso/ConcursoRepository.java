@@ -21,8 +21,8 @@ public interface ConcursoRepository extends JpaRepository<Concurso, Long> {
             "c.user.id) "+
             "FROM Concurso c " +
             "JOIN c.contestDisciplinaMaterias cdm " +
-            "WHERE c.user.id = :userId " +
+            "WHERE c.user.id = :userId and cdm.concurso.id = :concursoId " +
             "GROUP BY c.id, c.nome, c.user.id")
-     List<ConcursoRequest> findConcursoRequestsByUserId(@Param("userId") Long userId);
+     ConcursoRequest findConcursoRequestsByUserIdAndConcursoId(@Param("userId") Long userId, @Param("concursoId") Long cocnursoId);
 
 }

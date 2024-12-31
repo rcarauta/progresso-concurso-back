@@ -60,7 +60,7 @@ public class AuthController {
 		return ResponseEntity.ok(new AuthResponse(token));
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/generate-token/{username}")
 	public ResponseEntity<?> generateTokenForUser(@PathVariable String username,  HttpServletRequest request) {
 		User user = userService.pegarUsuarioPeloUsername(username);
@@ -87,7 +87,7 @@ public class AuthController {
 	    
 	    var authToken = new UsernamePasswordAuthenticationToken(
                 userDetails,
-                userDetails.getPassword(),
+                null,
                 userDetails.getAuthorities() 
         );
 

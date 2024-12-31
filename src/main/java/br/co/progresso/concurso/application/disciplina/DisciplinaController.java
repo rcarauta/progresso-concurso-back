@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,24 +20,28 @@ public class DisciplinaController {
     @Autowired
     private DisciplinaService disciplinaService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<DisciplinaRequest> salvarDisciplina(@RequestBody DisciplinaRequest request) {
         DisciplinaRequest disciplinaSalva = disciplinaService.salvarDisciplina(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(disciplinaSalva);
     }
     
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list")
     public ResponseEntity<List<DisciplinaRequest>> listarTodasDisciplinas() {
     	List<DisciplinaRequest> listaDisciplina = disciplinaService.listarTodasDisciplinas();
     	return ResponseEntity.status(HttpStatus.OK).body(listaDisciplina);
     }
     
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{concursoId}/list_not_concurso")
     public ResponseEntity<List<DisciplinaRequest>> listarDisciplinasNaoAssociadasAoConcurso(@PathVariable Long concursoId) {
     	List<DisciplinaRequest> listaNotConcurso = disciplinaService.listarDisciplinasNaoAssociadasAoConcurso(concursoId);
     	return ResponseEntity.status(HttpStatus.OK).body(listaNotConcurso);
     }
     
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{concursoId}/porcentagem_disciplina")
     public ResponseEntity<List<DisciplinaRequest>> totalPorcentagemDisciplina(@PathVariable Long concursoId) {
     	List<DisciplinaRequest> listaRequest = disciplinaService.totalPorcentagemDisciplina(concursoId);

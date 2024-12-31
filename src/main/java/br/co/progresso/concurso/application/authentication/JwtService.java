@@ -1,24 +1,21 @@
 package br.co.progresso.concurso.application.authentication;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
@@ -28,6 +25,14 @@ public class JwtService {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+    
+    public Set<String> extractRoles(String token) {
+        return extractClaim(token, claims -> {
+            @SuppressWarnings("unchecked")
+            List<String> roles = (List<String>) claims.get("roles");
+            return new HashSet<>(roles);
+        });
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -46,33 +51,9 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-    	
-    	 String username = extractUsername(token);
-         Claims claims = extractAllClaims(token);
-       
-         @SuppressWarnings("unchecked")
-         Set<String> tokenRoles = new HashSet<>((List<String>) claims.get("roles"));
-         
-         
-         if(SecurityContextHolder.getContext().getAuthentication() != null) {
-        	  auth = SecurityContextHolder.getContext().getAuthentication();
-         } else {
-        	 SecurityContextHolder.getContext().setAuthentication(auth);
-         }
-         
-         // Verificação: o nome de usuário e as roles devem ser compatíveis
-         System.out.println("Token recebido: " + token);
-         System.out.println("Usuário autenticado: " + SecurityContextHolder.getContext().getAuthentication());
-
-
-
-         return username.equals(userDetails.getUsername())
-                 && !isTokenExpired(token)
-                 && userDetails.getAuthorities().stream()
-                     .map(GrantedAuthority::getAuthority)
-                     .collect(Collectors.toSet())
-                     .containsAll(tokenRoles);
+    public boolean isTokenValid(String token, UserDetails userDetails) {	
+    	  String username = extractUsername(token);
+          return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

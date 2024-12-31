@@ -56,6 +56,7 @@ public class ConcursoDisciplinaMateriaService {
 		concursoDisciplinaMateria.setDisciplina(disciplina);
 		Materia materia = materiaRepository.findById(materiaId).get();
 		concursoDisciplinaMateria.setMateria(materia);
+		concursoDisciplinaMateria.setPorcentagem(0f);
 		
 		return concursoDisciplinaMateria;
 	}
