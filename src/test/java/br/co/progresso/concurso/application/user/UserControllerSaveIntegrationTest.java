@@ -1,5 +1,7 @@
 package br.co.progresso.concurso.application.user;
 
+import br.co.progresso.concurso.infra.role.Role;
+import br.co.progresso.concurso.infra.role.RoleRepository;
 import br.co.progresso.concurso.infra.user.User;
 import br.co.progresso.concurso.infra.user.UserRepository;
 import br.co.progresso.concurso.application.authentication.JwtService;
@@ -17,7 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,6 +42,9 @@ public class UserControllerSaveIntegrationTest {
 
     @Autowired
     private JwtService jwtService;
+    
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Test
     public void deveSalvarUsuarioComSucesso() throws Exception {
@@ -47,7 +55,14 @@ public class UserControllerSaveIntegrationTest {
         userRequest.setPassword("senha123");
         userRequest.setEnabled(true);
 
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         mockMvc.perform(post("/user")
                         .header("Authorization", "Bearer " + token)

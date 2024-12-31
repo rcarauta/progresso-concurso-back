@@ -1,6 +1,9 @@
 package br.co.progresso.concurso.application.user;
 
 import br.co.progresso.concurso.application.authentication.JwtService;
+import br.co.progresso.concurso.infra.role.Role;
+import br.co.progresso.concurso.infra.role.RoleRepository;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,7 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,6 +39,9 @@ public class UserControllerListIntegrationTest {
 
     @Autowired
     private JwtService jwtService;
+    
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Test
     public void verifyListAllUsers() throws Exception {
@@ -43,7 +52,14 @@ public class UserControllerListIntegrationTest {
 
         Mockito.when(userService.listarTodosUsuarios()).thenReturn(listUserRequest);
 
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         mockMvc.perform(get("/user/list") .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))

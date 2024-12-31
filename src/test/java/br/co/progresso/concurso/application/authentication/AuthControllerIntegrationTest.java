@@ -10,6 +10,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.co.progresso.concurso.infra.role.Role;
+import br.co.progresso.concurso.infra.role.RoleRepository;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -44,6 +51,9 @@ public class AuthControllerIntegrationTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@BeforeEach
 	void setup() {
@@ -64,7 +74,14 @@ public class AuthControllerIntegrationTest {
 
 		// Mock do serviço JWT
 		String mockToken = "mock-jwt-token";
-		when(jwtService.generateToken(username, 1L)).thenReturn(mockToken);
+		
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+		
+		when(jwtService.generateToken(username, 1L, 
+				roles.stream().map(Role::getName).collect(Collectors.toSet()))).thenReturn(mockToken);
 
 		// Execução do teste
 		ResultActions result = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
@@ -75,7 +92,8 @@ public class AuthControllerIntegrationTest {
 
 		// Verifica interações
 		verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-		verify(jwtService, times(1)).generateToken(username, 1L);
+		verify(jwtService, times(1)).generateToken(username, 1L , 
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 	}
 
 }

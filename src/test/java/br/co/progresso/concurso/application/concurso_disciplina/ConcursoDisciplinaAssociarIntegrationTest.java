@@ -9,7 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,8 @@ import br.co.progresso.concurso.infra.disciplina.Disciplina;
 import br.co.progresso.concurso.infra.disciplina.DisciplinaRepository;
 import br.co.progresso.concurso.infra.materia.Materia;
 import br.co.progresso.concurso.infra.materia.MateriaRepository;
+import br.co.progresso.concurso.infra.role.Role;
+import br.co.progresso.concurso.infra.role.RoleRepository;
 import br.co.progresso.concurso.infra.user.UserRepository;
 
 @SpringBootTest
@@ -60,6 +65,9 @@ public class ConcursoDisciplinaAssociarIntegrationTest {
 
 	@Autowired
 	private MateriaRepository materiaRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Test
 	public void testAssociarDisciplinasAoConcurso() throws Exception {
@@ -70,7 +78,14 @@ public class ConcursoDisciplinaAssociarIntegrationTest {
 		concursoRequest.setPercentualEstudadoFloat(0.1f);
 		concursoRequest.setUserId(1L);
 
-		String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
 		String concursoResponse = mockMvc
 				.perform(post("/concurso").header("Authorization", "Bearer " + token)
@@ -179,7 +194,15 @@ public class ConcursoDisciplinaAssociarIntegrationTest {
 		Long concursoId = concurso.getId();
 		Long disciplinaId = disciplina.getId();
 		Long materiaId = materia.getId();
-		String token = jwtService.generateToken("admin", 1L);
+		
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
 		String materiaRequestJson = """
 				{

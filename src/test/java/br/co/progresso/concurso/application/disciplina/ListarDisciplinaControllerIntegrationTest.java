@@ -8,7 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import br.co.progresso.concurso.application.authentication.JwtService;
+import br.co.progresso.concurso.infra.role.Role;
+import br.co.progresso.concurso.infra.role.RoleRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,6 +38,9 @@ public class ListarDisciplinaControllerIntegrationTest {
     
     @Autowired
     private JwtService jwtService;
+    
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Test
     void listarTodasDisciplinas_DeveRetornarDuasDisciplinas() throws Exception {
@@ -46,7 +54,14 @@ public class ListarDisciplinaControllerIntegrationTest {
         disciplina2.setNome("Português");
 
         List<DisciplinaRequest> mockDisciplinaList = Arrays.asList(disciplina1, disciplina2);
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         when(disciplinaService.listarTodasDisciplinas()).thenReturn(mockDisciplinaList);
         
@@ -71,7 +86,14 @@ public class ListarDisciplinaControllerIntegrationTest {
         
         DisciplinaRequest disciplina1 = new DisciplinaRequest(1L, "Matemática", 20.3F, CategoriaDisciplina.BASICA, 2);
         DisciplinaRequest disciplina2 = new DisciplinaRequest(2L, "Português", 20.3F, CategoriaDisciplina.BASICA, 1);
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         List<DisciplinaRequest> disciplinasNaoAssociadas = Arrays.asList(disciplina1, disciplina2);
         when(disciplinaService.listarDisciplinasNaoAssociadasAoConcurso(concursoId))

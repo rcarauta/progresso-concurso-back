@@ -5,11 +5,18 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
@@ -17,6 +24,7 @@ import javax.crypto.SecretKey;
 public class JwtService {
 
     private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private  Authentication auth;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -27,10 +35,11 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(String username, Long userId) {
+    public String generateToken(String username, Long userId, Set<String> roles) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("userId", userId) 
+                .claim("userId", userId)
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Expira em 10 horas
                 .signWith(SECRET_KEY)
@@ -38,8 +47,32 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    	
+    	 String username = extractUsername(token);
+         Claims claims = extractAllClaims(token);
+       
+         @SuppressWarnings("unchecked")
+         Set<String> tokenRoles = new HashSet<>((List<String>) claims.get("roles"));
+         
+         
+         if(SecurityContextHolder.getContext().getAuthentication() != null) {
+        	  auth = SecurityContextHolder.getContext().getAuthentication();
+         } else {
+        	 SecurityContextHolder.getContext().setAuthentication(auth);
+         }
+         
+         // Verificação: o nome de usuário e as roles devem ser compatíveis
+         System.out.println("Token recebido: " + token);
+         System.out.println("Usuário autenticado: " + SecurityContextHolder.getContext().getAuthentication());
+
+
+
+         return username.equals(userDetails.getUsername())
+                 && !isTokenExpired(token)
+                 && userDetails.getAuthorities().stream()
+                     .map(GrantedAuthority::getAuthority)
+                     .collect(Collectors.toSet())
+                     .containsAll(tokenRoles);
     }
 
     private boolean isTokenExpired(String token) {

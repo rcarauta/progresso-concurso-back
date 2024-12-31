@@ -2,6 +2,9 @@ package br.co.progresso.concurso.application.concurso;
 
 import br.co.progresso.concurso.application.ConcursoNaoEncontradoException;
 import br.co.progresso.concurso.application.authentication.JwtService;
+import br.co.progresso.concurso.infra.role.Role;
+import br.co.progresso.concurso.infra.role.RoleRepository;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,7 +16,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,6 +41,8 @@ public class ConcursoControllerListIntegrationTest {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Test
     void listarTodosConcursosTest() throws Exception {
@@ -45,7 +53,14 @@ public class ConcursoControllerListIntegrationTest {
         );
         Mockito.when(concursoService.recuperarTodosConcursos()).thenReturn(concursoRequests);
 
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         mockMvc.perform(get("/concurso/list") .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -69,7 +84,14 @@ public class ConcursoControllerListIntegrationTest {
         // Simulação do comportamento do serviço
         Mockito.when(concursoService.recuperarTodosConcursosDoUsuario(userId)).thenReturn(concursoList);
 
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         // Simula a requisição GET para a URL /list/{userId} e valida a resposta
         mockMvc.perform(get("/concurso/list/{userId}", userId).header("Authorization", "Bearer " + token)
@@ -91,7 +113,14 @@ public class ConcursoControllerListIntegrationTest {
         concursoRequest.setPercentualEstudadoFloat(75.0f);
         concursoRequest.setUserId(1L);
 
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         Mockito.when(concursoService.buscarConcursoPeloId(contestId)).thenReturn(concursoRequest);
 
@@ -107,7 +136,14 @@ public class ConcursoControllerListIntegrationTest {
     public void shouldReturnNotFoundWhenConcursoNotFound() throws Exception {
         Long contestId = 1L;
 
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         Mockito.when(concursoService.buscarConcursoPeloId(contestId)).thenThrow(new ConcursoNaoEncontradoException(contestId));
 

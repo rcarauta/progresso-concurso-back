@@ -9,6 +9,9 @@ import br.co.progresso.concurso.application.DisciplinaDuplicadaException;
 import br.co.progresso.concurso.application.authentication.JwtService;
 import br.co.progresso.concurso.infra.disciplina.Disciplina;
 import br.co.progresso.concurso.infra.disciplina.DisciplinaRepository;
+import br.co.progresso.concurso.infra.role.Role;
+import br.co.progresso.concurso.infra.role.RoleRepository;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,6 +38,9 @@ public class SalvarDisciplinaControllerIntegrationTest {
 
     @Autowired
     private JwtService jwtService;
+    
+    @Autowired
+    private RoleRepository roleRepository;
   
     @Test
     public void salvarDisciplina_deveRetornarStatus201EObjetoSalvo() throws Exception {
@@ -44,7 +53,14 @@ public class SalvarDisciplinaControllerIntegrationTest {
         request.setCiclos(1);
 
         String jsonRequest = new ObjectMapper().writeValueAsString(request);
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         MvcResult result = mockMvc.perform(post("/disciplina")
                         .header("Authorization", "Bearer " + token)

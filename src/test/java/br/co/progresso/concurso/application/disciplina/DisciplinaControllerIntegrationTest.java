@@ -2,6 +2,11 @@ package br.co.progresso.concurso.application.disciplina;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.jupiter.api.Test;
@@ -23,6 +28,8 @@ import br.co.progresso.concurso.infra.disciplina.Disciplina;
 import br.co.progresso.concurso.infra.disciplina.DisciplinaRepository;
 import br.co.progresso.concurso.infra.materia.Materia;
 import br.co.progresso.concurso.infra.materia.MateriaRepository;
+import br.co.progresso.concurso.infra.role.Role;
+import br.co.progresso.concurso.infra.role.RoleRepository;
 import br.co.progresso.concurso.infra.user.User;
 import br.co.progresso.concurso.infra.user.UserRepository;
 
@@ -54,6 +61,9 @@ public class DisciplinaControllerIntegrationTest {
     
     @Autowired
     private DataConverter converter;
+    
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Test
     public void testTotalPorcentagemDisciplina() throws Exception {	
@@ -108,7 +118,14 @@ public class DisciplinaControllerIntegrationTest {
         salvarConcursoDisciplinaMateria(concurso, disciplina2, materia3, 40f);
         salvarConcursoDisciplinaMateria(concurso, disciplina2, materia4, 60f);
         
-        String token = jwtService.generateToken("admin", 1L);
+		Role role = roleRepository.findByName("ROLE_ADMIN").get();
+		
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+
+		// Gerar um token JWT válido
+		String token = jwtService.generateToken("admin", 1L,
+				roles.stream().map(Role::getName).collect(Collectors.toSet()));
 
         mockMvc.perform(get("/disciplina/" + concurso.getId() + "/porcentagem_disciplina")
         		.header("Authorization", "Bearer " + token)
