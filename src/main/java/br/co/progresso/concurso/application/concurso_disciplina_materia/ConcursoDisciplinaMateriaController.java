@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,15 @@ public class ConcursoDisciplinaMateriaController {
 		List<MateriaRequest> request = concursoDisciplinaMateriaService.recuperaMateriaRequestComPorcentagem(disciplinaId, 
 				concursoId);
 		return ResponseEntity.status(HttpStatus.OK).body(request);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("{concursoId}/{disciplinaId}/{materiaId}/desassociar")
+	public ResponseEntity<List<ConcursoDisciplinaMateriaRequest>> desassociarMateriaDaDisciplina(@PathVariable Long concursoId,
+			@PathVariable Long disciplinaId, @PathVariable Long materiaId) {
+		List<ConcursoDisciplinaMateriaRequest> listaRequest = concursoDisciplinaMateriaService.desassociarMateriaDisciplina(
+				concursoId, disciplinaId, materiaId);
+		return ResponseEntity.status(HttpStatus.OK).body(listaRequest);
 	}
 	
 }

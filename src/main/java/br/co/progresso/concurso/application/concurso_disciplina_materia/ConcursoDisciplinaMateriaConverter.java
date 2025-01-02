@@ -2,6 +2,7 @@ package br.co.progresso.concurso.application.concurso_disciplina_materia;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -51,6 +52,21 @@ public class ConcursoDisciplinaMateriaConverter {
 		concurso.setTempoEstudo(LocalTime.ofSecondOfDay(minutosTotais));
 		
 		return concurso;
+	}
+	
+	public List<ConcursoDisciplinaMateriaRequest> listaDisciplinaToRequest(List<ConcursoDisciplinaMateria> lista) {
+		List<ConcursoDisciplinaMateriaRequest> listaRequest = new ArrayList<>();
+		
+		lista.forEach(concurso -> {
+			ConcursoDisciplinaMateriaRequest request = new ConcursoDisciplinaMateriaRequest();
+			request.setConcursoId(concurso.getConcurso().getId());
+			request.setDisciplinaId(concurso.getDisciplina().getId());
+			request.setMateriaId(concurso.getMateria().getId());
+			request.setPorcentagem(concurso.getPorcentagem());
+			request.setTempoEstudo(concurso.getTempoEstudo());
+			listaRequest.add(request);
+		});
+		return listaRequest;
 	}
 
 	

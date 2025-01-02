@@ -45,9 +45,16 @@ public class MateriaController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping
+	@PutMapping("/atualizar")
 	public ResponseEntity<MateriaRequest> atualizarMateria(@RequestBody MateriaRequest materiaRequest) {
 		MateriaRequest request = materiaService.atualizarMateria(materiaRequest);
+		return ResponseEntity.status(HttpStatus.OK).body(request);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/{materiaId}/recuperar_materia")
+	public ResponseEntity<MateriaRequest> recuperarMateria(@PathVariable Long materiaId) {
+		MateriaRequest request = materiaService.recuperarMateria(materiaId);
 		return ResponseEntity.status(HttpStatus.OK).body(request);
 	}
 	

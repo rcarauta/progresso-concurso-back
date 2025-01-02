@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,21 @@ public class DisciplinaController {
     public ResponseEntity<List<DisciplinaRequest>> totalPorcentagemDisciplina(@PathVariable Long concursoId) {
     	List<DisciplinaRequest> listaRequest = disciplinaService.totalPorcentagemDisciplina(concursoId);
     	return ResponseEntity.status(HttpStatus.OK).body(listaRequest);
+    }
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{disciplinaId}/alterar_disciplina")
+    public ResponseEntity<DisciplinaRequest> alterarDisciplina(@PathVariable Long disciplinaId, 
+    		@RequestBody DisciplinaRequest disciplinaResquest) {
+    	DisciplinaRequest dr = disciplinaService.alterarDisciplina(disciplinaId, disciplinaResquest);
+    	return ResponseEntity.status(HttpStatus.OK).body(dr);
+    }
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{disciplinaId}/selecinar_disciplina")
+    public ResponseEntity<DisciplinaRequest> selecionarDisciplina(@PathVariable Long disciplinaId) {
+    	DisciplinaRequest dr = disciplinaService.buscarPorId(disciplinaId);
+    	return ResponseEntity.status(HttpStatus.OK).body(dr);
     }
     
 

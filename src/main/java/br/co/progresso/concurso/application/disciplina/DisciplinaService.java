@@ -62,4 +62,12 @@ public class DisciplinaService {
 		return listRequest;
 	}
 
+	public DisciplinaRequest alterarDisciplina(Long disciplinaId, DisciplinaRequest disciplinaRequest) {
+		Disciplina disciplina = disciplinaRepository.findById(disciplinaId).get();
+		disciplina.setNome(disciplinaRequest.getNome());
+		disciplina = disciplinaRepository.save(disciplina);
+		disciplinaRequest = disciplinaConverter.disciplinaToDisciplinaRequest(disciplina);
+		return disciplinaRequest;
+	}
+
 }

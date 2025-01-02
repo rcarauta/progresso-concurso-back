@@ -46,5 +46,12 @@ public class MateriaService {
 		MateriaRequest materiaRequestSalva = materiaConverter.materiaToMateriaRequest(materia);
 		return materiaRequestSalva;
 	}
+
+
+	public MateriaRequest recuperarMateria(Long materiaId) {
+		Materia materia = materiaRepository.findById(materiaId).get();
+		MateriaRequest request = materiaConverter.materiaToMateriaRequest(materia);
+		return request;
+	}
 	
 }

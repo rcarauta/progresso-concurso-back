@@ -20,6 +20,8 @@ import br.co.progresso.concurso.infra.concurso.ConcursoRepository;
 import br.co.progresso.concurso.infra.concurso_disciplina.ConcursoDisciplina;
 import br.co.progresso.concurso.infra.concurso_disciplina.ConcursoDisciplinaId;
 import br.co.progresso.concurso.infra.concurso_disciplina.ConcursoDisciplinaRepository;
+import br.co.progresso.concurso.infra.concurso_disciplina_materia.ConcursoDisciplinaMateria;
+import br.co.progresso.concurso.infra.concurso_disciplina_materia.ConcursoDisciplinaMateriaRepository;
 import br.co.progresso.concurso.infra.disciplina.Disciplina;
 import br.co.progresso.concurso.infra.disciplina.DisciplinaRepository;
 
@@ -40,6 +42,9 @@ public class ConcursoDisciplinaService {
 	
 	@Autowired
 	private ConcursoDisciplinaRepository concursoDisciplinaRepository;
+	
+	@Autowired
+	private ConcursoDisciplinaMateriaRepository concursoDisciplinaMateriaRepository;
 
 
 	@Transactional
@@ -101,6 +106,16 @@ public class ConcursoDisciplinaService {
 		return request;
 	}
 	
+	public void removerDisciplinaConcurso(Long concursoId, Long disciplinaId) {
+		List<ConcursoDisciplinaMateria> cdm = concursoDisciplinaMateriaRepository
+				.findByIdConcursoIdAndIdDisciplinaId(concursoId, disciplinaId);
+		if(cdm.size() == 0 ) {
+			ConcursoDisciplina cd = concursoDisciplinaRepository
+					.findByContestIdAndDisciplinaId(concursoId, disciplinaId).get();
+			concursoDisciplinaRepository.delete(cd);
+		}
+	}
+	
 	private List<DisciplinaRequest> adicionarPorcentagemDisciplinas(Long concursoId, List<DisciplinaRequest> listaRequest) {
 	    List<DisciplinaRequest> listaComPorcentagem = disciplinaRepository.findDisciplinasWithAverageProgressByConcurso(concursoId);
 	    
@@ -120,5 +135,6 @@ public class ConcursoDisciplinaService {
 
 	    return listaRequest;
 	}
+
 
 }

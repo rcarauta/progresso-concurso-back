@@ -85,6 +85,20 @@ public class ConcursoDisciplinaMateriaService {
 
 		return requestList;
 	}
+
+
+	public List<ConcursoDisciplinaMateriaRequest> desassociarMateriaDisciplina(Long concursoId, Long disciplinaId,
+			Long materiaId) {
+		ConcursoDisciplinaMateriaId id = new ConcursoDisciplinaMateriaId(materiaId, disciplinaId, concursoId);
+		ConcursoDisciplinaMateria paraDeletar = concursoDisciplinaMateriaRepository.findById(id).get();
+		concursoDisciplinaMateriaRepository.delete(paraDeletar);
+		List<ConcursoDisciplinaMateria> lista = concursoDisciplinaMateriaRepository.
+				findByConcursoId(concursoId);
+		List<ConcursoDisciplinaMateriaRequest> listaRequest = concursoDisciplinaMateriaConverter
+				.listaDisciplinaToRequest(lista);
+				
+		return listaRequest;
+	}
 	
 	
 }
